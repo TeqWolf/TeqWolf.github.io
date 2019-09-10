@@ -1,5 +1,5 @@
 /*
-	Helios by HTML5 UP
+	Solid State by HTML5 UP
 	html5up.net | @ajlkn
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 */
@@ -8,24 +8,16 @@
 
 	var	$window = $(window),
 		$body = $('body'),
-		settings = {
-
-			// Carousels
-				carousels: {
-					speed: 4,
-					fadeIn: true,
-					fadeDelay: 250
-				},
-
-		};
+		$header = $('#header'),
+		$banner = $('#banner');
 
 	// Breakpoints.
 		breakpoints({
-			wide:      [ '1281px',  '1680px' ],
-			normal:    [ '961px',   '1280px' ],
-			narrow:    [ '841px',   '960px'  ],
-			narrower:  [ '737px',   '840px'  ],
-			mobile:    [ null,      '736px'  ]
+			xlarge:	'(max-width: 1680px)',
+			large:	'(max-width: 1280px)',
+			medium:	'(max-width: 980px)',
+			small:	'(max-width: 736px)',
+			xsmall:	'(max-width: 480px)'
 		});
 
 	// Play initial animations on page load.
@@ -35,183 +27,119 @@
 			}, 100);
 		});
 
-	// Dropdowns.
-		$('#nav > ul').dropotron({
-			mode: 'fade',
-			speed: 350,
-			noOpenerFade: true,
-			alignment: 'center'
-		});
+	// Header.
+		if ($banner.length > 0
+		&&	$header.hasClass('alt')) {
 
-	// Scrolly.
-		$('.scrolly').scrolly();
+			$window.on('resize', function() { $window.trigger('scroll'); });
 
-	// Nav.
+			$banner.scrollex({
+				bottom:		$header.outerHeight(),
+				terminate:	function() { $header.removeClass('alt'); },
+				enter:		function() { $header.addClass('alt'); },
+				leave:		function() { $header.removeClass('alt'); }
+			});
 
-		// Button.
-			$(
-				'<div id="navButton">' +
-					'<a href="#navPanel" class="toggle"></a>' +
-				'</div>'
-			)
-				.appendTo($body);
+		}
 
-		// Panel.
-			$(
-				'<div id="navPanel">' +
-					'<nav>' +
-						$('#nav').navList() +
-					'</nav>' +
-				'</div>'
-			)
-				.appendTo($body)
-				.panel({
-					delay: 500,
-					hideOnClick: true,
-					hideOnSwipe: true,
-					resetScroll: true,
-					resetForms: true,
-					target: $body,
-					visibleClass: 'navPanel-visible'
-				});
+	// Menu.
+		var $menu = $('#menu');
 
-	// Carousels.
-		$('.carousel').each(function() {
+		$menu._locked = false;
 
-			var	$t = $(this),
-				$forward = $('<span class="forward"></span>'),
-				$backward = $('<span class="backward"></span>'),
-				$reel = $t.children('.reel'),
-				$items = $reel.children('article');
+		$menu._lock = function() {
 
-			var	pos = 0,
-				leftLimit,
-				rightLimit,
-				itemWidth,
-				reelWidth,
-				timerId;
+			if ($menu._locked)
+				return false;
 
-			// Items.
-				if (settings.carousels.fadeIn) {
+			$menu._locked = true;
 
-					$items.addClass('loading');
+			window.setTimeout(function() {
+				$menu._locked = false;
+			}, 350);
 
-					$t.scrollex({
-						mode: 'middle',
-						top: '-20vh',
-						bottom: '-20vh',
-						enter: function() {
+			return true;
 
-							var	timerId,
-								limit = $items.length - Math.ceil($window.width() / itemWidth);
+		};
 
-							timerId = window.setInterval(function() {
-								var x = $items.filter('.loading'), xf = x.first();
+		$menu._show = function() {
 
-								if (x.length <= limit) {
+			if ($menu._lock())
+				$body.addClass('is-menu-visible');
 
-									window.clearInterval(timerId);
-									$items.removeClass('loading');
-									return;
+		};
 
-								}
+		$menu._hide = function() {
 
-								xf.removeClass('loading');
+			if ($menu._lock())
+				$body.removeClass('is-menu-visible');
 
-							}, settings.carousels.fadeDelay);
+		};
 
-						}
-					});
+		$menu._toggle = function() {
 
-				}
+			if ($menu._lock())
+				$body.toggleClass('is-menu-visible');
 
-			// Main.
-				$t._update = function() {
-					pos = 0;
-					rightLimit = (-1 * reelWidth) + $window.width();
-					leftLimit = 0;
-					$t._updatePos();
-				};
+		};
 
-				$t._updatePos = function() { $reel.css('transform', 'translate(' + pos + 'px, 0)'); };
+		$menu
+			.appendTo($body)
+			.on('click', function(event) {
 
-			// Forward.
-				$forward
-					.appendTo($t)
-					.hide()
-					.mouseenter(function(e) {
-						timerId = window.setInterval(function() {
-							pos -= settings.carousels.speed;
+				event.stopPropagation();
 
-							if (pos <= rightLimit)
-							{
-								window.clearInterval(timerId);
-								pos = rightLimit;
-							}
+				// Hide.
+					$menu._hide();
 
-							$t._updatePos();
-						}, 10);
-					})
-					.mouseleave(function(e) {
-						window.clearInterval(timerId);
-					});
+			})
+			.find('.inner')
+				.on('click', '.close', function(event) {
 
-			// Backward.
-				$backward
-					.appendTo($t)
-					.hide()
-					.mouseenter(function(e) {
-						timerId = window.setInterval(function() {
-							pos += settings.carousels.speed;
+					event.preventDefault();
+					event.stopPropagation();
+					event.stopImmediatePropagation();
 
-							if (pos >= leftLimit) {
+					// Hide.
+						$menu._hide();
 
-								window.clearInterval(timerId);
-								pos = leftLimit;
+				})
+				.on('click', function(event) {
+					event.stopPropagation();
+				})
+				.on('click', 'a', function(event) {
 
-							}
+					var href = $(this).attr('href');
 
-							$t._updatePos();
-						}, 10);
-					})
-					.mouseleave(function(e) {
-						window.clearInterval(timerId);
-					});
+					event.preventDefault();
+					event.stopPropagation();
 
-			// Init.
-				$window.on('load', function() {
+					// Hide.
+						$menu._hide();
 
-					reelWidth = $reel[0].scrollWidth;
-
-					if (browser.mobile) {
-
-						$reel
-							.css('overflow-y', 'hidden')
-							.css('overflow-x', 'scroll')
-							.scrollLeft(0);
-						$forward.hide();
-						$backward.hide();
-
-					}
-					else {
-
-						$reel
-							.css('overflow', 'visible')
-							.scrollLeft(0);
-						$forward.show();
-						$backward.show();
-
-					}
-
-					$t._update();
-
-					$window.on('resize', function() {
-						reelWidth = $reel[0].scrollWidth;
-						$t._update();
-					}).trigger('resize');
+					// Redirect.
+						window.setTimeout(function() {
+							window.location.href = href;
+						}, 350);
 
 				});
 
-		});
+		$body
+			.on('click', 'a[href="#menu"]', function(event) {
+
+				event.stopPropagation();
+				event.preventDefault();
+
+				// Toggle.
+					$menu._toggle();
+
+			})
+			.on('keydown', function(event) {
+
+				// Hide on escape.
+					if (event.keyCode == 27)
+						$menu._hide();
+
+			});
 
 })(jQuery);

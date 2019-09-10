@@ -1,19 +1,17 @@
-Helios by HTML5 UP
+Solid State by HTML5 UP
 html5up.net | @ajlkn
 Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 
 
-This is Helios, a brand new site template for HTML5 UP. It's clean, modern, and designed
-to take advantage of larger (well, wider) displays while still being capable of gracefully
-scaling down to fit all manner of smaller ones.
+After a somewhat extended break from HTML5 UP (to work on a secret-ish new project --
+more on that later!) I'm back with a brand new design: Solid State, a slick new multi-
+pager that combines some of the ideas I've played with over at Pixelarity with an "angular"
+sort of look. Hope you dig it :)
 
-Demo images* courtesy of Michael Domaradzki, an awesome photographer I met over at
-deviantART. Check out his portfolio here:
+Demo images* courtesy of Unsplash, a radtastic collection of CC0 (public domain) images
+you can use for pretty much whatever.
 
-http://md.photomerchant.net/
-
-(* = Not included! Only meant for use with my own on-site demo, so please do NOT download
-and/or use any of Michaels's work without his explicit permission!)
+(* = not included)
 
 AJ
 aj@lkn.io | @ajlkn
@@ -22,7 +20,7 @@ aj@lkn.io | @ajlkn
 Credits:
 
 	Demo Images:
-		Michael Domaradzki (md.photomerchant.net)
+		Unsplash (unsplash.com)
 
 	Icons:
 		Font Awesome (fontawesome.io)
